@@ -1,0 +1,88 @@
+== CH2: The Basics
+
+* TOKNOW
+* Types of [blue]#enum#
+** Strongly-typed enum
+** Plain enum
+** Any other types
+* [blue]#static_assert# , and assert at runtime
+* exceptions
+** [blue]#out_of_range# , [blue]#length_error# , [blue]#bad_alloc#
+* Type of error [blue]#new# throws?
+* Initialization
+[source, C++]
+
+....
+int a {7.2};
+....
+* Why does C++ has headers and sources files? Why not all together?
+* [blue]#const# and [blue]#constexpr#
+* [blue]#complex#
+* [blue]#namespace#
+* 2.6 Advice
+** Focus on programming techniques, not on language features.
+
+== CHAPTER 3: A Tour of C++: Abstraction Mechanisms
+
+===  3.2 Classes
+
+==== 3.2.1 Concrete Types
+
+===== 3.2.1.2 A Container
+
+* although C++ defines an interface for a garbage collector (§34.5), it is not
+guaranteed that one is available to make unused memory available for new objects.
+In some environments you can’t use a garbage collector, and sometimes you prefer more precise control of destruction
+(§13.6.4) for logical or performance reasons. We need a mechanism to ensure that the memory
+allocated by the constructor is deallocated; that mechanism is a destructor
+
+* The technique of acquiring resources in a constructor and releasing them in a destructor, known as Resource Acquisition Is Initialization or
+RAII, allows us to eliminate "naked new operations,". Similarly, "naked operations" should be avoided.
+** naked new operations,’’ that is, to avoid allocations in general code and keep them buried inside the implementation of well-behaved abstractions.
+
+* [blue]#assert#
+
+* initializer list
+```C++
+// standard-library type to the compiler: when we use a {}-list, such as {1,2,3,4}
+std::initializer_list<T>
+```
+
+===== 3.2.2 Abstract Classes
+
+* [blue]#virtual# means might be redefined later
+* pure virtual functions +++<u>must</u>+++ be redefined.
+* Abstract class does have a destructor and that destructor
+is virtual. Again, that is common for abstract classes because they tend to be manipulated through
+references or pointers, and someone destroying a Container through a pointer has no idea what
+resources are owned by its implementation; see also §3.2.4
+* [blue]#list# subscripting is atrocious to [blue]#vector# subscripting.
+
+===== 3.2.3 Virtual Functions
+
+*  virtual function table or simply the [blue]#vtbl#. The functions in the vtbl allow the object to be used correctly even when the size of the object and
+the layout of its data are unknown to the caller.
+** The implementation of the caller needs only to know the location of the pointer to the vtbl in a Container and the index used for each virtual function.
+** This virtual call mechanism can be made almost as efficient as the "normal function call" (within 25%).
+** Its space overhead is one pointer in each object of a class with virtual functions plus one [blue]#vtbl# for each such class.
+** Naturally, this interface is an abstract class: as far as representation is concerned, nothing (except
+the location of the pointer to the vtbl) is common for every derivative.
+
+===== 3.2.4 Class Hierarchy
+
+* A virtual destructor is essential for an abstract class because an object of a derived class is usually manipulated through
+the interface provided by its abstract base class. In particular, it may be deleted through a pointer to
+a base class. Then, the virtual function call mechanism ensures that the proper destructor is called.
+
+* That destructor then *implicitly* invokes the destructors of its bases and members.
+
+=== 3.3 Copy and Move
+
+* For simple concrete types, default (memberwise) copy is often exactly the right semantics for copy.
+
+==== 3.3.1 Copying Containers
+
+* When a class is a resource handle, that is, it is responsible for an object accessed through a pointer, the default memberwise copy is typically a disaster. +
+Memberwise copy would violate the resource handle’s invariant (§2.4.3.2). For example, the default copy would leave a copy of a Vector referring to the same elements as the original.
+
+* Copying of an object of a class is defined by two members: a copy constructor and a copy assignment.
