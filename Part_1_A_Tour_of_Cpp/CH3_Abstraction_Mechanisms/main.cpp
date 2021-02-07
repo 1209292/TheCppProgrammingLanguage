@@ -39,4 +39,12 @@ int main(){
         Vector anotherCopy(5);
         anotherCopy = original; // Uses the copy assignment
     }
+
+    /*** 3.3.2 Moving Containers ***/
+
+    {
+       Vector v(5);
+       Vector vv(10);
+       //Vector vvv = vv + v;
+    }
 }
