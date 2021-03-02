@@ -13,7 +13,7 @@ void complexInCpp();
 
 void InitializationResolvedAtCompileTime();
 
-void constAndConstExpr();
+void fAndConstExpr();
 constexpr double square(double x) { return x*x; } // evaluated at compile time
 
 class Vector {
@@ -92,7 +92,7 @@ int main()
 
     // const and constexp
 
-    constAndConstExpr();
+    //constAndConstExpr();
 
     /**** 2.3 User Defined Types ***/
 
